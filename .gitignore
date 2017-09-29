@@ -1,0 +1,6 @@
+parkettSch/packages/**
+parkettSch/bin/**
+parkettSch/obj/**
+parkettSch/.vs/**
+parkettSch/parkettSch.csproj
+*.dll
