@@ -3,5 +3,5 @@ Stupid-Authenticating-Web-App/bin/**
 Stupid-Authenticating-Web-App/obj/**
 Stupid-Authenticating-Web-App/.vs/**
 Stupid-Authenticating-Web-App/parkettSch.csproj
-Stupid-Authenticating-Web-App/App_Start/Startup.Auth.cs
+Stupid-Authenticating-Web-App/Stupid-Authenticating-Web-App/App_Start/Startup.Auth.cs
 *.dll
