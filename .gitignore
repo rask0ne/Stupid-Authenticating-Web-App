@@ -1,0 +1,6 @@
+Stupid-Authenticating-Web-App/packages/**
+Stupid-Authenticating-Web-App/bin/**
+Stupid-Authenticating-Web-App/obj/**
+Stupid-Authenticating-Web-App/.vs/**
+Stupid-Authenticating-Web-App/parkettSch.csproj
+*.dll
