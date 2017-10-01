@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 using Stupid_Authenticating_Web_App.Models;
 
 namespace Stupid_Authenticating_Web_App.Controllers
@@ -11,6 +12,7 @@ namespace Stupid_Authenticating_Web_App.Controllers
     [RequireHttps]
     public class HomeController : Controller
     {
+        [Authorize(Roles = "user")]
         public ActionResult Index()
         {
             List<ApplicationUser> users = new List<ApplicationUser>();
