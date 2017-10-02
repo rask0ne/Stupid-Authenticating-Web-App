@@ -4,15 +4,17 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Microsoft.Ajax.Utilities;
 using Stupid_Authenticating_Web_App.Models;
 
 namespace Stupid_Authenticating_Web_App.Controllers
 {
     [RequireHttps]
+    [Authorize]
     public class HomeController : Controller
     {
-        [Authorize(Roles = "user")]
+        
         public ActionResult Index()
         {
             List<ApplicationUser> users = new List<ApplicationUser>();
@@ -24,6 +26,7 @@ namespace Stupid_Authenticating_Web_App.Controllers
             return View();
         }
 
+        [Authorize(Roles = "user")]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

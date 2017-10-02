@@ -29,5 +29,7 @@ namespace Stupid_Authenticating_Web_App.Models
         {
             return new ApplicationDbContext();
         }
+
+        //public System.Data.Entity.DbSet<Stupid_Authenticating_Web_App.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

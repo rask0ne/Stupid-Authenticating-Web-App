@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNet.Identity.EntityFramework
+@model IEnumerable<Stupid_Authenticating_Web_App.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) {
+        <tr class="user-table__buttons">
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "Account", new {name = item.UserName})" class="edit-button edit-button_type_edit">
+                    <span class="glyphicon glyphicon-wrench"></span>
+                </a>
+                <a href="@Url.Action("Delete", "Account", new {name = item.UserName})" class="edit-button edit-button_type_delete">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </a>
+
+            </td>
+        </tr>
+    }
+
+</table>

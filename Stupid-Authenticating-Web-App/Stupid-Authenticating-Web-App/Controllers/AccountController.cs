@@ -62,6 +62,11 @@ namespace Stupid_Authenticating_Web_App.Controllers
             return View();
         }
 
+        public ActionResult Index()
+        {
+            return View(UserManager.Users);
+        }
+
         //
         // POST: /Account/Login
         [HttpPost]
@@ -405,6 +410,7 @@ namespace Stupid_Authenticating_Web_App.Controllers
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
+                        await UserManager.AddToRoleAsync(user.Id, "user");
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         return RedirectToLocal(returnUrl);
                     }
@@ -512,5 +518,47 @@ namespace Stupid_Authenticating_Web_App.Controllers
             }
         }
         #endregion
+  
+        public async Task<ActionResult> Edit(string name)
+        {
+            ApplicationUser user = await UserManager.FindByNameAsync(name);
+            if (UserManager.IsInRole(user.Id, "user"))
+            {
+                UserManager.AddToRole(user.Id, "blocked");
+                await UserManager.RemoveFromRoleAsync(user.Id, "user");
+                if (name == User.Identity.GetUserName())
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+            }
+            else
+            {
+                UserManager.AddToRole(user.Id, "user");
+                await UserManager.RemoveFromRoleAsync(user.Id, "blocked");
+            }
+            return RedirectToAction("Index", "Account");
+        }
+
+        public async Task<ActionResult> Delete(string name)
+        {
+            ApplicationUser user = await UserManager.FindByEmailAsync(name);
+            if (user != null)
+            {
+                IdentityResult result = await UserManager.DeleteAsync(user);
+                if (name == User.Identity.Name)
+                {
+                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                    return RedirectToAction("Login", "Account");
+                }
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Account");
+                }
+            }
+            return RedirectToAction("Login", "Account");
+        }
     }
+
+
 }

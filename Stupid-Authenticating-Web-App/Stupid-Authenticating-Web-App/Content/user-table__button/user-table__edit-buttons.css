@@ -1,0 +1,9 @@
+﻿.user-table__button {
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.user-table:focus .user-table__button {
+    opacity: 1;
+}
+

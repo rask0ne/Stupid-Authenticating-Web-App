@@ -22,3 +22,15 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.edit-button {
+    opacity: 0;
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.user-table__buttons:hover .edit-button {
+    opacity: 1;
+}
+
+
