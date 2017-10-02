@@ -355,15 +355,6 @@ namespace Stupid_Authenticating_Web_App.Controllers
                 return RedirectToAction("Login");
             }
 
-            if (loginInfo.Login.LoginProvider == "Facebook")
-            {
-                var identity = AuthenticationManager.GetExternalIdentity(DefaultAuthenticationTypes.ExternalCookie);
-                var access_token = identity.FindFirstValue("FacebookAccessToken");
-                var fb = new FacebookClient(access_token);
-                dynamic myInfo = fb.Get("/me?fields=email"); // specify the email field
-                loginInfo.Email = myInfo.email;
-            }
-
             // Выполнение входа пользователя посредством данного внешнего поставщика входа, если у пользователя уже есть имя входа
             var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
             switch (result)
@@ -528,6 +519,7 @@ namespace Stupid_Authenticating_Web_App.Controllers
                 await UserManager.RemoveFromRoleAsync(user.Id, "user");
                 if (name == User.Identity.GetUserName())
                 {
+                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                     return RedirectToAction("Login", "Account");
                 }
 

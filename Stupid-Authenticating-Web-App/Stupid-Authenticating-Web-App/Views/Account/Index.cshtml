@@ -2,10 +2,46 @@
 @model IEnumerable<Stupid_Authenticating_Web_App.Models.ApplicationUser>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "List Of Users";
 }
 
-<h2>Index</h2>
+<h2>List Of Users</h2>
+
+<style type="text/css">
+    TABLE {
+        width: 200px; 
+        border-collapse: collapse; 
+        border-spacing: 7px 11px;
+        border-top: white;
+    }
+    TD, TH {
+        padding: 3px; 
+        border: 1px solid white;
+        border-top: white;
+    }
+    TH {
+        background: white;
+        border-top: white;
+    }
+</style>
+<script>
+    function editBar(name) {
+        var str = dsocument.getElementById("email").value;
+        var status = document.getElementById("status");
+        var re = /^[^\s()<>@,;:\/]+@\w[\w\.-]+\.[a-z]{2,}$/i;
+        if (re.test(str)) status.innerHTML = "Адрес правильный";
+        else status.innerHTML = "Адрес неверный";
+        if(isEmpty(str)) status.innerHTML = "Поле пустое";
+    }
+    function editBar(names) {
+        var str = dsocument.getElementById("email").value;
+        var status = document.getElementById("status");
+        var re = /^[^\s()<>@,;:\/]+@\w[\w\.-]+\.[a-z]{2,}$/i;
+        if (re.test(str)) status.innerHTML = "Адрес правильный";
+        else status.innerHTML = "Адрес неверный";
+        if(isEmpty(str)) status.innerHTML = "Поле пустое";
+    }
+</script>
 
 <table class="table">
     <tr>

@@ -14,7 +14,7 @@ namespace Stupid_Authenticating_Web_App.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        
+        [Authorize(Roles = "user")]
         public ActionResult Index()
         {
             List<ApplicationUser> users = new List<ApplicationUser>();
@@ -31,12 +31,13 @@ namespace Stupid_Authenticating_Web_App.Controllers
         {
             ViewBag.Message = "Your application description page.";
 
-            return View();
+            return Redirect("/Account");
         }
 
+        [Authorize(Roles = "blocked")]
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "This page is allowed for blocked users.";
 
             return View();
         }
