@@ -534,11 +534,12 @@ namespace Stupid_Authenticating_Web_App.Controllers
 
         public async Task<ActionResult> Delete(string name)
         {
-            ApplicationUser user = await UserManager.FindByEmailAsync(name);
+            var trimStart = name.TrimStart();
+            ApplicationUser user = await UserManager.FindByEmailAsync(trimStart);
             if (user != null)
             {
                 IdentityResult result = await UserManager.DeleteAsync(user);
-                if (name == User.Identity.Name)
+                if (trimStart == User.Identity.Name)
                 {
                     AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                     return RedirectToAction("Login", "Account");
