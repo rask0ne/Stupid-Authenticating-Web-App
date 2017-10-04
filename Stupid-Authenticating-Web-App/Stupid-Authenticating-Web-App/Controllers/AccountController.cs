@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Facebook;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Stupid_Authenticating_Web_App.Models;
@@ -62,9 +65,19 @@ namespace Stupid_Authenticating_Web_App.Controllers
             return View();
         }
 
+        [Authorize(Roles = "user")]
         public ActionResult Index()
         {
-            return View(UserManager.Users);
+            List<UserItemViewModel> users = new List<UserItemViewModel>();
+            foreach (var u in UserManager.Users)
+            {
+                UserItemViewModel userToView = new UserItemViewModel();
+                userToView.Email = u.Email;
+                userToView.RoleName = UserManager.IsInRole(u.Id, "user") ? "user" : "blocked";
+                userToView.EmailConfirmed = u.EmailConfirmed;
+                users.Add(userToView);
+            }
+            return View(users);
         }
 
         //
@@ -177,7 +190,7 @@ namespace Stupid_Authenticating_Web_App.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await UserManager.AddToRoleAsync(user.Id, "user");
+                    await UserManager.AddToRoleAsync(user.Id, "blocked");
                     //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
                     var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -209,7 +222,12 @@ namespace Stupid_Authenticating_Web_App.Controllers
                 return View("Error");
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+            if (result.Succeeded)
+            {
+                await UserManager.AddToRoleAsync(userId, "user");
+                return View("ConfirmEmail");
+            }
+            return View("Error");
         }
 
         //
@@ -509,15 +527,17 @@ namespace Stupid_Authenticating_Web_App.Controllers
             }
         }
         #endregion
-  
+
+        [Authorize(Roles = "user")]
         public async Task<ActionResult> Edit(string name)
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(name);
+            var fixedName = name.TrimStart();
+            ApplicationUser user = await UserManager.FindByNameAsync(fixedName);
             if (UserManager.IsInRole(user.Id, "user"))
             {
                 UserManager.AddToRole(user.Id, "blocked");
                 await UserManager.RemoveFromRoleAsync(user.Id, "user");
-                if (name == User.Identity.GetUserName())
+                if (fixedName == User.Identity.GetUserName())
                 {
                     AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                     return RedirectToAction("Login", "Account");
@@ -532,14 +552,15 @@ namespace Stupid_Authenticating_Web_App.Controllers
             return RedirectToAction("Index", "Account");
         }
 
+        [Authorize(Roles = "user")]
         public async Task<ActionResult> Delete(string name)
         {
-            var trimStart = name.TrimStart();
-            ApplicationUser user = await UserManager.FindByEmailAsync(trimStart);
+            var fixedName = name.TrimStart();
+            ApplicationUser user = await UserManager.FindByEmailAsync(fixedName);
             if (user != null)
             {
                 IdentityResult result = await UserManager.DeleteAsync(user);
-                if (trimStart == User.Identity.Name)
+                if (fixedName == User.Identity.Name)
                 {
                     AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                     return RedirectToAction("Login", "Account");

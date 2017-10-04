@@ -1,16 +1,21 @@
 ﻿@using Microsoft.AspNet.Identity.EntityFramework
-@model IEnumerable<Stupid_Authenticating_Web_App.Models.ApplicationUser>
+@model List<Stupid_Authenticating_Web_App.Models.UserItemViewModel>
 
 @{
     ViewBag.Title = "List Of Users";
+    ViewBag.Social = "Social Network";
 }
 
-<h2>List Of Users</h2>
+<h2></h2>
 
 <style type="text/css">
     table th {background-color: lightblue;}
-    .hover_Row { background-color: yellow; }
-    .clicked_Row { background-color: lightgreen; }
+    .hover_Row {
+        background-color: #F0FFFF;
+    }
+    .clicked_Row {
+        background-color: #E6E6FA;
+    }
 
     TABLE {
         width: 200px; 
@@ -21,33 +26,24 @@
         padding: 3px; 
         border: 1px solid white;
     }
-
-    tr {
-        height: 80px;   
-    }
-
     TH {
         background: white;
     }
 </style>
 
-<div id="openModal" class="modalDialog">
-    <div>
-        уууу
-    </div>
-</div>
-
-
-<p><input type="button" value="Change" id="edit">
-    <input type="button" value="Delete" onClick="del()" id="delete"></p>
+<p><input type="button" class="btn btn-default" value="Change" id="edit">
+    <input type="button" class="btn btn-danger" value="Delete" onClick="del()" id="delete"></p>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<table class="table" id="color_table">
+<table class="table table-bordered" id="color_table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
+            Email
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Roles)
+            Role
+        </th>
+        <th>
+            EmailConfirmed
         </th>
     </tr>
 
@@ -57,13 +53,10 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                <a href="@Url.Action("Edit", "Account", new {name = item.UserName})" class="edit-button edit-button_type_edit">
-                    <span class="glyphicon glyphicon-wrench"></span>
-                </a>
-                <a href="@Url.Action("Delete", "Account", new {name = item.UserName})" class="edit-button edit-button_type_delete">
-                    <span class="glyphicon glyphicon-trash"></span>
-                </a>
-
+                @Html.DisplayFor(modelItem => item.RoleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailConfirmed)    
             </td>
         </tr>
     }
@@ -153,12 +146,20 @@
     </script>
     <script>
         $('#delete').click(function() {
-            $('.selected').children().each(function () {
-                var kek = $(this).html();
-                location.href = '@Url.Action("Delete", "Account")?name=' + kek;
+            $('.selected').children().each(function() {
+                var email = $(this).html();
+                location.href = '@Url.Action("Delete", "Account")?name=' + email;
                 return false;
             });
         });
     </script>
-    
+    <script>
+        $('#edit').click(function() {
+            $('.selected').children().each(function() {
+                var email = $(this).html();
+                location.href = '@Url.Action("Edit", "Account")?name=' + email;
+                return false;
+            });
+        });
+    </script>
 }

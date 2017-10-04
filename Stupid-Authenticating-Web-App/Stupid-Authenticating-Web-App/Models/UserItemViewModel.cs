@@ -7,8 +7,9 @@ namespace Stupid_Authenticating_Web_App.Models
 {
     public class UserItemViewModel
     {
-        public string Id { get; set; }
         public string Email { get; set; }
         public string RoleName { get; set; }
+        public string SocialNetwork { get; set; }
+        public bool EmailConfirmed { get; set; }
     }
 }
